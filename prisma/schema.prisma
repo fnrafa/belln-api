@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  fullname     String
+  email        String
+  username     String         @unique
+  password     String
+  verified     Boolean        @default(false)
+  verifiedTime DateTime?
+  roleId       String         @default("1")
+  role         Role           @relation(fields: [roleId], references: [id])
+  addresses    Address[]
+  orders       Order[]
+  EmailVerify  EmailVerify[]
+  phone        String?        @unique @db.VarChar(15)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+  Notification Notification[]
+}
+
+model Role {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  users     User[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model EmailVerify {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  code      String?
+  createdAt DateTime  @default(now())
+  updateAt  DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  Item      Item[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleteAt  DateTime?
+}
+
+model Item {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String?
+  categoryId  String
+  category    Category   @relation(fields: [categoryId], references: [id])
+  itemTypes   ItemType[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
+  Rate        Rate[]
+}
+
+model ItemType {
+  id        String      @id @default(uuid())
+  type      String
+  price     Float
+  stock     Int
+  url       String?
+  itemId    String
+  item      Item        @relation(fields: [itemId], references: [id])
+  refill    Boolean     @default(false)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+  Rate      Rate[]
+  OrderItem OrderItem[]
+}
+
+model Rate {
+  id         String    @id @default(uuid())
+  Message    String?
+  Rate       Float
+  itemTypeId String
+  item       ItemType  @relation(fields: [itemTypeId], references: [id])
+  createdAt  DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+  deleteAt   DateTime?
+  Item       Item?     @relation(fields: [itemId], references: [id])
+  itemId     String?
+}
+
+model Address {
+  id        String    @id @default(uuid())
+  address   String
+  city      String
+  zipCode   String
+  country   String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  orders    Order[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Order {
+  id           String         @id @default(uuid())
+  userId       String
+  user         User           @relation(fields: [userId], references: [id])
+  addressId    String
+  address      Address        @relation(fields: [addressId], references: [id])
+  paymentId    String?
+  payment      Payment?       @relation(fields: [paymentId], references: [id])
+  orderItems   OrderItem[]
+  status       String         @default("pending")
+  delivered    Boolean        @default(false)
+  confirmed    Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+  Notification Notification[]
+}
+
+model OrderItem {
+  id         String    @id @default(uuid())
+  quantity   Int
+  orderId    String
+  order      Order     @relation(fields: [orderId], references: [id])
+  itemTypeId String
+  itemType   ItemType  @relation(fields: [itemTypeId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+}
+
+model Payment {
+  id        String    @id @default(uuid())
+  method    String
+  status    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Order     Order[]
+}
+
+model Notification {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  orderId   String
+  order     Order     @relation(fields: [orderId], references: [id])
+  message   String
+  isRead    Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
