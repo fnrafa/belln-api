@@ -20,6 +20,7 @@ const fieldDefinitions = {
     password: Joi.string().min(8).max(15).required(),
     paymentId: Joi.string().guid({version: 'uuidv4'}),
     price: Joi.number().required(),
+    phone: Joi.string().max(15).required(),
     refill: Joi.boolean().required(),
     repeat_password: Joi.string().equal(Joi.ref('password')).required(),
     stock: Joi.number().integer().required(),

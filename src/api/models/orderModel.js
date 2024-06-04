@@ -2,14 +2,30 @@ const {prisma} = require("../../config/prisma");
 const CustomError = require("../../utils/customError");
 exports.readOrder = async (userId) => {
     try {
-        return await prisma.order.findMany({where: {deletedAt: null, userId}});
+        return await prisma.order.findMany({
+            where: {deletedAt: null, userId}, orderBy: {createdAt: 'desc'}, include: {
+                user: true, address: true, payment: true, orderItems: {
+                    include: {
+                        itemType: true
+                    }
+                }
+            }
+        });
     } catch (error) {
         throw new CustomError(error.message)
     }
 }
 exports.readAllOrder = async () => {
     try {
-        return await prisma.order.findMany({where: {deletedAt: null}, orderBy: {createdAt: 'desc'}});
+        return await prisma.order.findMany({
+            where: {deletedAt: null}, orderBy: {createdAt: 'desc'}, include: {
+                user: true, address: true, payment: true, orderItems: {
+                    include: {
+                        itemType: true
+                    }
+                }
+            }
+        });
     } catch (error) {
         throw new CustomError(error.message)
     }

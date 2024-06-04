@@ -1,5 +1,5 @@
 const CustomError = require("../../utils/customError");
-const { hash, compare } = require("bcryptjs");
+const {hash, compare} = require("bcryptjs");
 const userModel = require("../models/userModel");
 const getToken = require("../../utils/jwtToken");
 exports.loginService = async (user, pass) => {
@@ -8,11 +8,11 @@ exports.loginService = async (user, pass) => {
     const token = await getToken(id);
     return {id, fullname, email, username, verified, token};
 }
-exports.registerService = async (mail, user, pass, name) => {
+exports.registerService = async (mail, user, pass, name, number) => {
     const hashedPassword = await hash(pass, 10);
     const {
-        id, email, username, verified, fullname
-    } = await userModel.createUser(mail, user, hashedPassword, name);
+        id, email, username, verified, fullname, phone
+    } = await userModel.createUser(mail, user, hashedPassword, name, number);
     const token = await getToken(id);
-    return {id, fullname, email, username, verified, token};
+    return {id, fullname, email, username, verified, phone, token};
 }

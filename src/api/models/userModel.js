@@ -7,11 +7,11 @@ exports.readUser = async () => {
         throw new CustomError(error.message)
     }
 }
-exports.createUser = async (email, username, password, fullname, roleId = "1") => {
+exports.createUser = async (email, username, password, fullname, phone, roleId = "1") => {
     try {
         return await prisma.user.create({
             data: {
-                email, username, password, fullname, roleId
+                email, username, password, fullname, roleId, phone
             },
         });
     } catch (error) {
