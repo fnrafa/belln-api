@@ -118,6 +118,19 @@ exports.addStock = async (id, stock) => {
         throw new CustomError(error.message);
     }
 }
+exports.decrementStock = async (id, value) => {
+    try {
+        return await prisma.itemType.update({
+            where: {id}, data: {
+                stock: {
+                    decrement: value
+                }
+            }
+        });
+    } catch (error) {
+        throw new CustomError(error.message);
+    }
+}
 exports.deleteItem = async ({id}) => {
     try {
         const {name} = await prisma.item.findUnique({where: {id}});
