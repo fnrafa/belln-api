@@ -1,5 +1,6 @@
 const Stripe = require('stripe');
 const { stripeSecretKey, stripeWebhookSecret } = require('../config/config');
+const CustomError = require("./customError");
 
 const stripe = Stripe(stripeSecretKey);
 
@@ -15,7 +16,7 @@ const handleWebhook = (body, sig) => {
     try {
         return stripe.webhooks.constructEvent(body, sig, stripeWebhookSecret);
     } catch (err) {
-        throw new Error(`Webhook Error: ${err.message}`);
+        throw new CustomError(`Webhook Error: ${err.message}`);
     }
 };
 

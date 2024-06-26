@@ -1,13 +1,12 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const { handleWebhook } = require('../../utils/stripe');
 const CustomError = require("../../utils/customError");
 const response = require("../../utils/responses");
 const notifyModel = require("../models/notificationModel");
+const {handleWebhook} = require("../../utils/stripe");
 
 exports.handleWebhook = async (req, res) => {
     const sig = req.headers['stripe-signature'];
-    console.log(sig);
     let event;
     try {
         event = handleWebhook(req.body, sig);
