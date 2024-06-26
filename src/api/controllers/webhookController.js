@@ -57,6 +57,7 @@ exports.handleWebhook = async (req, res) => {
         default:
     }*/
     const event = req.body;
+    console.log(event.type);
     switch (event.type) {
         case 'payment_intent.succeeded':
             const paymentIntent = event.data.object;
