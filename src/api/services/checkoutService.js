@@ -11,7 +11,7 @@ exports.CheckoutService = async (userId, orderId) => {
     if (!Array.isArray(order.orderItems)) throw new CustomError("Order items are not valid", 400);
 
     const existingPayment = await getPaymentByOrderId(orderId);
-    
+
     if (existingPayment && existingPayment["status"] === 'succeeded') {
         return {
             message: "There is no payment needed for this order as it has already been paid.",
@@ -28,7 +28,7 @@ exports.CheckoutService = async (userId, orderId) => {
     const totalPrice = amount + adminPrice;
 
     const paymentIntent = await createPaymentIntent(totalPrice, "AUD", {userId, orderId});
-    await insertPayment(paymentIntent.id, orderId, totalPrice);
+    const payment = await insertPayment(paymentIntent.id, orderId, totalPrice);
 
     const paymentLink = `${baseUrl}/user/order/payment/${paymentIntent.client_secret}`;
 
@@ -36,6 +36,7 @@ exports.CheckoutService = async (userId, orderId) => {
         paymentLink,
         clientSecret: paymentIntent.client_secret,
         orderId: orderId,
+        paymentId: payment["id"],
         amount: amount,
         adminPrice: adminPrice,
         totalPrice: totalPrice,
