@@ -6,6 +6,7 @@ const fieldDefinitions = {
     city: Joi.string().min(3).required(),
     code: Joi.number().integer().min(0).max(999999).required(),
     country: Joi.string().min(3).max(56).required(),
+    currency: Joi.string().required(),
     delivered: Joi.boolean().required(),
     description: Joi.string().required(),
     email: Joi.string().email().required(),
@@ -17,6 +18,7 @@ const fieldDefinitions = {
         itemTypeId: Joi.string().guid({version: 'uuidv4'}).required(),
         quantity: Joi.number().integer().min(1).required()
     })).min(1).required(),
+    orderId: Joi.string().required(),
     password: Joi.string().min(8).max(15).required(),
     paymentId: Joi.string().guid({version: 'uuidv4'}),
     price: Joi.number().required(),

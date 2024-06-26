@@ -7,15 +7,21 @@ const response = require("../utils/responses");
 const responseTime = require('response-time');
 const {serverTest} = require('../api/controllers/serverController');
 const {join} = require("path");
+const webhook = require("../api/controllers/webhookController");
 exports.route = (app) => {
     app.use(express.json());
     app.use(responseTime());
+
     app.use('/auth', authRoutes);
     app.use('/guest', guestRoutes);
     app.use('/user', userRoutes);
     app.use('/admin', adminRoutes);
     app.use('/server', serverTest);
+
     app.use('/images', express.static(join(__dirname, '../../public/images')));
+
+    app.post('/webhook', express.raw({type: 'application/json'}), webhook.handleWebhook);
+
     app.use('/*', (req, res) => {
         response.MethodNotAllowed(res);
     });

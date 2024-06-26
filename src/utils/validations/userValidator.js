@@ -3,6 +3,7 @@ const userValidate = {
     addAddress: validate(['address', 'city', 'zipCode', 'country']),
     addOrder: validate(['addressId', 'orderItems', 'delivered']),
     onlyId: validate(['id']),
-    updateAddress: validate(['id', 'address', 'city', 'zipCode', 'country'])
+    updateAddress: validate(['id', 'address', 'city', 'zipCode', 'country']),
+    checkout: validate(['orderId'])
 }
 module.exports = userValidate;

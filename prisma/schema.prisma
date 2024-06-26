@@ -142,13 +142,16 @@ model OrderItem {
 }
 
 model Payment {
-  id        String    @id @default(uuid())
-  method    String
-  status    String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
-  Order     Order[]
+  id                    String    @id @default(uuid())
+  method                String
+  status                String
+  amount                Float
+  currency              String
+  stripePaymentIntentId String?   @unique
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  deletedAt             DateTime?
+  orders                Order[]
 }
 
 model Notification {

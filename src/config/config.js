@@ -16,10 +16,14 @@ const getEnvVariable = (varName) => {
 };
 const config = {
     port: getEnvVariable('PORT'),
+    baseUrl: getEnvVariable('BASE_URL'),
     secret: getEnvVariable('SECRET'),
     mailerUser: getEnvVariable('MAILER_USER'),
     mailerPass: getEnvVariable('MAILER_PASS'),
     tempPath: getEnvVariable('TEMP_PATH'),
-    imagePath: getEnvVariable('IMAGE_PATH')
+    imagePath: getEnvVariable('IMAGE_PATH'),
+    stripeSecretKey: getEnvVariable('STRIPE_SECRET_KEY'),
+    stripeWebhookSecret: getEnvVariable('STRIPE_WEBHOOK_SECRET'),
+    stripePublishableKey: getEnvVariable('STRIPE_PUBLISHABLE_KEY')
 };
 module.exports = config;

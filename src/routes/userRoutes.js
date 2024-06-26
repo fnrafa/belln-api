@@ -3,6 +3,8 @@ const userValidate = require("../utils/validations/userValidator");
 const address = require("../api/controllers/addressController");
 const order = require("../api/controllers/orderController");
 const notify = require("../api/controllers/notifyController");
+const stripe = require("../api/views/stripe");
+const checkout = require("../api/controllers/checkoutController");
 const router = require('express').Router();
 
 router.get('/address', authorize(['user', 'admin']), address.getAddress);
@@ -12,7 +14,8 @@ router.delete('/address', authorize(['user', 'admin']), userValidate.onlyId, add
 
 router.get('/order', authorize(['user', 'admin']), order.getOrder);
 router.post('/order', authorize(['user', 'admin']), userValidate.addOrder, order.addOrder);
-//router.post('/order/checkout', authorize(['user', 'admin']));
+router.post('/order/checkout', authorize(['user', 'admin']), userValidate.checkout, checkout.checkout);
+router.get('/order/payment/:key', stripe.payment);
 
 router.get('/notify', authorize(['user', 'admin']), notify.getNotification);
 router.put('/notify', authorize(['user', 'admin']), userValidate.onlyId, notify.setAsRead);

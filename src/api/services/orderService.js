@@ -2,6 +2,7 @@ const CustomError = require("../../utils/customError");
 const orderModel = require("../models/orderModel");
 const notifyModel = require("../models/notificationModel");
 const {getDetailOrderItem} = require("../models/orderItemModel");
+const addressModel = require("../models/addressModel");
 const {decrementStock, getItemTypeIsExist} = require("../models/itemModel");
 exports.getOrderService = async (id) => {
     const order = await orderModel.readOrder(id);
@@ -14,6 +15,7 @@ exports.getAllOrderService = async () => {
     return order;
 }
 exports.addOrderService = async (userId, addressId, delivered, orderItems) => {
+    await addressModel.getAddress(addressId);
     const {id, status} = await orderModel.addOrder(userId, addressId, delivered, orderItems);
     if (id) await notifyModel.notifyAdmin(id, "New Order need to be confirmed");
     return {id, status};
