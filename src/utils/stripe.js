@@ -11,7 +11,7 @@ const createPaymentIntent = async (amount, currency, metadata) => {
     });
 };
 
-const handleWebhook = (req, sig, body) => {
+const handleWebhook = (body, sig) => {
     try {
         return stripe.webhooks.constructEvent(body, sig, stripeWebhookSecret);
     } catch (err) {
