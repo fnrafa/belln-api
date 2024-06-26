@@ -9,9 +9,9 @@ exports.handleWebhook = async (req, res) => {
     const sig = req.headers['stripe-signature'];
     let event;
     try {
-        event = handleWebhook(req, sig);
+        event = handleWebhook(req, sig, req.body);
     } catch (err) {
-        response.BadRequest(res, `Webhook Error: ${err.message}`);
+        response.BadRequest(res, err.message);
     }
     switch (event.type) {
         case 'payment_intent.succeeded':
