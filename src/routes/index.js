@@ -12,15 +12,15 @@ exports.route = (app) => {
     app.use(express.json());
 
     app.use(responseTime());
-    app.use('/auth', authRoutes);
-    app.use('/guest', guestRoutes);
-    app.use('/user', userRoutes);
-    app.use('/admin', adminRoutes);
-    app.use('/server', serverTest);
+    app.use('/api/auth', authRoutes);
+    app.use('/api/guest', guestRoutes);
+    app.use('/api/user', userRoutes);
+    app.use('/api/admin', adminRoutes);
+    app.use('/api/server', serverTest);
 
-    app.use('/images', express.static(join(__dirname, '../../public/images')));
-    app.post('/webhook', handleWebhook);
-    app.use('/*', (req, res) => {
+    app.use('/api/images', express.static(join(__dirname, '../../public/images')));
+    app.post('/api/webhook', handleWebhook);
+    app.use('/api/*', (req, res) => {
         response.MethodNotAllowed(res);
     });
 }
