@@ -7,6 +7,7 @@ const response = require("../utils/responses");
 const responseTime = require('response-time');
 const {serverTest} = require('../api/controllers/serverController');
 const {join} = require("path");
+const {handleWebhook} = require("../api/controllers/webhookController");
 exports.route = (app) => {
     app.use(express.json());
 
@@ -19,6 +20,7 @@ exports.route = (app) => {
 
     app.use('/images', express.static(join(__dirname, '../../public/images')));
 
+    app.post('/webhook', express.raw({type: 'application/json'}), handleWebhook);
     app.use('/*', (req, res) => {
         response.MethodNotAllowed(res);
     });

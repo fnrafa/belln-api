@@ -7,6 +7,7 @@ const notifyModel = require("../models/notificationModel");
 
 exports.handleWebhook = async (req, res) => {
     const sig = req.headers['stripe-signature'];
+    console.log(sig);
     let event;
     try {
         event = handleWebhook(req.body, sig);
