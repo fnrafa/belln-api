@@ -1,6 +1,6 @@
 const cors = require('cors');
 const response = require('../utils/responses')
-const allowedOrigins = ['http://localhost.com', 'https://belln.com', "http://localhost:3010"];
+const allowedOrigins = '*';
 const corsOptions = {
     origin: allowedOrigins,
     methods: 'HEAD,GET,PUT,PATCH,POST,DELETE',
