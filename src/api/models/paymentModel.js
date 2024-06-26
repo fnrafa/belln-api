@@ -21,10 +21,14 @@ exports.insertPayment = async (id, orderId, totalPrice) => {
 }
 exports.getPaymentByOrderId = async (orderId) => {
     try {
-        const {paymentId} = await prisma.order.findFirst({where: {id: orderId}}) || null;
-        return await prisma.payment.findFirst({
-            where: {id: paymentId}
-        });
+        const {paymentId} = await prisma.order.findFirst({where: {id: orderId}});
+        if (paymentId) {
+            return await prisma.payment.findFirst({
+                where: {id: paymentId}
+            });
+        } else {
+            return {}
+        }
     } catch (error) {
         throw new CustomError(`Failed to retrieve payment: ${error.message}`);
     }
