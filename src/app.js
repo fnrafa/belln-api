@@ -8,8 +8,10 @@ const {route} = require("./routes/index");
 const {urlencoded} = require("express");
 const app = express();
 const http = require('http');
+const webhook = require("./api/controllers/webhookController");
 const server = http.createServer(app);
 
+app.post('/webhook', express.raw({type: 'application/json'}), webhook.handleWebhook);
 initializeSocket(server);
 app.use(urlencoded({extended: true}));
 corsMiddleware(app);

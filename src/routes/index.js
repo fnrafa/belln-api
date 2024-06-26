@@ -7,11 +7,8 @@ const response = require("../utils/responses");
 const responseTime = require('response-time');
 const {serverTest} = require('../api/controllers/serverController');
 const {join} = require("path");
-const webhook = require("../api/controllers/webhookController");
 exports.route = (app) => {
     app.use(express.json());
-
-    app.post('/webhook', express.raw({type: 'application/json'}), webhook.handleWebhook);
 
     app.use(responseTime());
     app.use('/auth', authRoutes);
