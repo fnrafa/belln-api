@@ -1,8 +1,9 @@
-const { PrismaClient } = require('@prisma/client');
+const {PrismaClient} = require('@prisma/client');
 const prisma = new PrismaClient();
 const CustomError = require("../../utils/customError");
 const response = require("../../utils/responses");
 const notifyModel = require("../models/notificationModel");
+const {updateStatus} = require("../models/orderModel");
 
 exports.handleWebhook = async (req, res) => {
     /*const sig = req.headers['stripe-signature'];
@@ -68,10 +69,7 @@ exports.handleWebhook = async (req, res) => {
                         }
                     }
                 });
-                await prisma.order.update({
-                    where: { id: order["id"] },
-                    data: { status: "success" }
-                });
+                await updateStatus(order["id"], "success");
                 await notifyModel.notifyAdmin(order["id"], "Order payment success, handle your client order now");
             } catch (error) {
                 throw new CustomError(`Failed to notify admin: ${error.message}`);
@@ -88,24 +86,21 @@ exports.handleWebhook = async (req, res) => {
                         }
                     }
                 });
-                await prisma.order.update({
-                    where: { id: order["id"] },
-                    data: { status: "failed" }
-                });
+                await updateStatus(order["id"], "failed");
             } catch (error) {
                 throw new CustomError(`Failed to update order status: ${error.message}`);
             }
             break;
         default:
     }
-    response.Success(res, { received: true });
+    response.Success(res, {received: true});
 };
 
 const updatePaymentStatus = async (stripePaymentIntentId, status) => {
     try {
         await prisma.payment.update({
-            where: { stripePaymentIntentId: stripePaymentIntentId },
-            data: { status: status },
+            where: {stripePaymentIntentId: stripePaymentIntentId},
+            data: {status: status},
         });
     } catch (error) {
         throw new CustomError(`Failed to update payment status: ${error.message}`);

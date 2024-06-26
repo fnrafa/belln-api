@@ -21,9 +21,9 @@ exports.insertPayment = async (id, orderId, totalPrice) => {
 }
 exports.getPaymentByOrderId = async (orderId) => {
     try {
-        const {paymentId} = await prisma.order.findFirst({where: {id: orderId}});
+        const {paymentId} = await prisma.order.findFirstOrThrow({where: {id: orderId}});
         if (paymentId) {
-            return await prisma.payment.findFirst({
+            return await prisma.payment.findFirstOrThrow({
                 where: {id: paymentId}
             });
         } else {
