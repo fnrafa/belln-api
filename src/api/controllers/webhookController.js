@@ -16,8 +16,8 @@ exports.handleWebhook = async (req, res) => {
     switch (event.type) {
         case 'payment_intent.succeeded':
             const paymentIntent = event.data.object;
-            await updatePaymentStatus(paymentIntent.id, 'succeeded');
             try {
+                await updatePaymentStatus(paymentIntent.id, 'succeeded');
                 const order = await prisma.order.findFirstOrThrow({
                     where: {
                         payment: {
@@ -25,15 +25,29 @@ exports.handleWebhook = async (req, res) => {
                         }
                     }
                 });
+                await prisma.order.update({
+                    where: {id: order["id"]},
+                    data: {status: "success"}
+                })
                 await notifyModel.notifyAdmin(order["id"], "Order payment success, handle your client order now");
             } catch (error) {
                 throw new CustomError(`Failed to notify admin: ${error.message}`)
             }
-            await notifyModel.notifyAdmin(id, "Order payment success, handle your client order now");
             break;
         case 'payment_intent.payment_failed':
             const paymentIntentFailed = event.data.object;
             await updatePaymentStatus(paymentIntentFailed.id, 'failed');
+            const order = await prisma.order.findFirstOrThrow({
+                where: {
+                    payment: {
+                        stripePaymentIntentId: paymentIntentFailed.id
+                    }
+                }
+            });
+            await prisma.order.update({
+                where: {id: order["id"]},
+                data: {status: "failed"}
+            })
             break;
         default:
     }
