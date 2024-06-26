@@ -55,7 +55,6 @@ exports.handleWebhook = async (req, res) => {
             }
             break;
         default:
-            console.log(`Unhandled event type ${event.type}`);
     }
 
     response.Success(res, { received: true });
